@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: ListView.builder(
               itemCount: context.watch<ChatContextProvider>().messages.length,
+              controller: scrollController,
               itemBuilder: (context, index) {
                 if (context.watch<ChatContextProvider>().messages[index].role ==
                         'user' &&
@@ -90,6 +92,11 @@ class _HomePageState extends State<HomePage> {
                       .read<ChatContextProvider>()
                       .getResponse(_messageController.text);
                   _messageController.clear();
+                  scrollController.animateTo(
+                    scrollController.position.maxScrollExtent,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
                 },
               ),
             ),
